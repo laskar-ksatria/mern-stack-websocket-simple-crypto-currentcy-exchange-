@@ -1,1 +1,1 @@
-# mern-stack-websocket-simple-crypto-currentcy-exchange-
+# react-crypto-currency-with-chart
