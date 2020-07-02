@@ -31,18 +31,19 @@ class OrderController {
     };
 
     static updateGainLoss(req,res,next) {
+        console.log(req.body)
         let id = req.params.tradeId;
         let userId = req.decoded.id;
         let { gainLoss } = req.body;
         let fixBalance;
-        Order.updateOne({_id: id}, {gain_loss: gainLoss, status: false})
+        Order.updateOne({_id: id}, {gain_loss: Number(gainLoss), status: false})
             .then(() => {
                 return User.findOne({_id: userId})
             })
             .then(users => {
                 let newBalance = users.demo_balance + Number(gainLoss);
                 fixBalance = newBalance
-                User.updateOne({_id: userId},{demo_balance: newBalance}, {omitUndefined: true})
+                return User.updateOne({_id: userId},{demo_balance: newBalance}, {omitUndefined: true})
             })
             .then(() => {
                 res.status(201).json({message: 'Your order has been close', balance: fixBalance})

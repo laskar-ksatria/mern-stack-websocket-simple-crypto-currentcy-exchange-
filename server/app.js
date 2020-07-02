@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3020;
 require('./db.connect')();
 
 //Socketio
-require('./Socket')(server);
+
 
 //app use
 app.use(express.json());

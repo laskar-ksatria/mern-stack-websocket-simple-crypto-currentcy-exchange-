@@ -9,7 +9,6 @@ let subs = {
     "format": "streamer"
  }
 
-
  cryptocompareWS.on('open', function(){
     console.log('connection established');
     cryptocompareWS.send(JSON.stringify(subs));

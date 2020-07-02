@@ -25,11 +25,9 @@ function MainPage() {
         .then(({data}) => {
             setLoading(false);
             setUserData(data);
-            console.log(data);
         })
         .catch(err => {
             setLoading(false);
-            console.log(err)
         })
     },[]);
 
@@ -42,7 +40,6 @@ function MainPage() {
             }
         })
         .then(({data}) => {
-            console.log(data);
             setMyOrder(data);
         })
     },[])
@@ -53,7 +50,6 @@ function MainPage() {
                 setMyOrder(data)
             })
             .catch(err => {
-                console.log(err);
             })
     };
 
@@ -69,7 +65,6 @@ function MainPage() {
             setUserData(data);
         })
         .catch(err => {
-            console.log(err)
         })
     }
 
@@ -86,14 +81,12 @@ function MainPage() {
     };
 
     return(
-       <React.Fragment>
-        
+       <React.Fragment>    
             <React.Fragment>
                 <Header />
                 <CardList getMyData={getMyData} getMarketPrice={getMarketPrice} getListMyOrder={getListMyOrder} />
                 <OrderTable getMyData={getMyData} myOrder={myOrder} userData={userData} marketPrice={marketPrice} getListMyOrder={getListMyOrder} />
-            </React.Fragment>
-          
+            </React.Fragment>   
        </React.Fragment>
     )
 }

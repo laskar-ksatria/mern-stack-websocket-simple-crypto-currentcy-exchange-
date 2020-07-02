@@ -1,7 +1,8 @@
 import React from 'react'
 import PriceCard from './PriceCard';
+import axios from 'axios';
 import { w3cwebsocket } from 'websocket';
-const client = new w3cwebsocket("wss://streamer.cryptocompare.com/v2?api_key=" + process.env.API_KEY)
+const client = new w3cwebsocket("wss://streamer.cryptocompare.com/v2?api_key=" + process.env.REACT_APP_API_KEY)
 
 class CardList extends React.Component {
 
@@ -25,13 +26,16 @@ class CardList extends React.Component {
     };
 
     componentDidMount() {
+        this.getPriceStart();
         client.onopen = () => {
             var subRequest = {
                 "action": "SubAdd",
                 "subs": [`5~CCCAGG~BTC~USD`, `5~CCCAGG~ETH~USD`, `5~CCCAGG~LTC~USD`, `5~CCCAGG~BCH~USD`]
             };
-            client.send(JSON.stringify(subRequest))
+            client.send(JSON.stringify(subRequest));
         };
+
+        
 
         client.onmessage = (message) => {
             let data = JSON.parse(message.data);
@@ -99,6 +103,20 @@ class CardList extends React.Component {
         };
     };
 
+    getPriceStart = () => {
+        axios({
+            url: process.env.REACT_APP_CRYPTO,
+            method: 'GET',
+        })
+        .then(({data}) => {
+            this.setState({BTC_marketPrice: data.BTC.USD})
+            this.setState({ETH_marketPrice: data.ETH.USD})
+            this.setState({LTC_marketPrice: data.LTC.USD})
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    };
 
     getCssColor = (type, data) => {
         let { lastPrice, marketPrice } = data;
@@ -127,9 +145,7 @@ class CardList extends React.Component {
                 this.setState({BCH_css: {color: 'yellow', background: '#c40b13', marketColor: '#c40b13'}})
             }
         }
-    }
-
-
+    };
 
     render() {
         return(
@@ -137,7 +153,7 @@ class CardList extends React.Component {
                  <PriceCard getMyData={this.props.getMyData} getListMyOrder={this.props.getListMyOrder} symbol="BTC" BTC_vol={this.state.BTC_vol} BTC_marketPrice={this.state.BTC_marketPrice} BTC_css={this.state.BTC_css} />
                  <PriceCard getMyData={this.props.getMyData} getListMyOrder={this.props.getListMyOrder} symbol="ETH" ETH_vol={this.state.ETH_vol} ETH_marketPrice={this.state.ETH_marketPrice} ETH_css={this.state.ETH_css} />
                  <PriceCard getMyData={this.props.getMyData} getListMyOrder={this.props.getListMyOrder} symbol="LTC" LTC_vol={this.state.LTC_vol} LTC_marketPrice={this.state.LTC_marketPrice} LTC_css={this.state.LTC_css} />
-                 <PriceCard getMyData={this.props.getMyData} getListMyOrder={this.props.getListMyOrder} symbol="BCH" BCH_vol={this.state.BCH_vol} BCH_marketPrice={this.state.BCH_marketPrice} BCH_css={this.state.BCH_css} />
+        
             </div>
         )
     }
